@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://kite.trade/publisher.js?v=3"></script>
+</head>
+
+<body>
+    <h1>Basket Order</h1>
+    <div>SYMBOL,QUANTITY</div>
+    <textarea style="width: 100%" id="basket" rows="10"></textarea>
+    <button onclick="createBasket()" hidden="true" id="create-basket-btn">Create Basket</button>
+    <br />
+    <br />
+    ENTER BASKET
+    <div id="enter-basket"></div>
+    EXIT BASKET
+    <div id="exit-basket"></div>
+
+    <script>
+        function createBasket() {
+            var kite_enter = new KiteConnect("uky14hfmn5fnfrlz");
+            var kite_exit = new KiteConnect("uky14hfmn5fnfrlz");
+
+            // Add a stock to the basket
+            const basket = document.getElementById("basket").value
+            basket.split("\n").forEach(item => {
+                const [symbol, _quantity] = item.split(",")
+                let quantity = Number(_quantity)
+
+                while (quantity !== 0) {
+                    let q = 0
+                    if (quantity < 1800) {
+                        q = quantity
+                        quantity = 0
+                    } else {
+                        q = 1800
+                        quantity -= 1800
+                    }
+
+                    kite_enter.add({
+                        exchange: "NFO",
+                        tradingsymbol: symbol,
+                        quantity: q,
+                        transaction_type: "BUY",
+                        order_type: "MARKET",
+                        product: "MIS"
+                    });
+
+                    kite_exit.add({
+                        exchange: "NFO",
+                        tradingsymbol: symbol,
+                        quantity: q,
+                        transaction_type: "SELL",
+                        order_type: "MARKET",
+                        product: "MIS"
+                    });
+
+                }
+            })
+
+            document.getElementById("enter-basket").innerHTML = ''
+            document.getElementById("exit-basket").innerHTML = ''
+
+            // OR, link the basket to any existing element you want
+            setTimeout(() => {
+                kite_enter.renderButton("#enter-basket");
+                kite_exit.renderButton("#exit-basket");
+            }, 5)
+        }
+
+        KiteConnect.ready(function () {
+            // Initialize a new Kite instance.
+            // You can initialize multiple instances if you need.
+
+            document.getElementById("create-basket-btn").hidden = false
+        });
+    </script>
+</body>
+
+</html>

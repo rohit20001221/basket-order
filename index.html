@@ -32,14 +32,19 @@
                 const [symbol, _quantity] = item.split(",")
                 let quantity = Number(_quantity)
 
+                let MAX_QUANTITY = 1800
+                if (symbol.includes("BANK")) {
+                    MAX_QUANTITY = 900
+                }
+
                 while (quantity !== 0) {
                     let q = 0
-                    if (quantity < 1800) {
+                    if (quantity < MAX_QUANTITY) {
                         q = quantity
                         quantity = 0
                     } else {
-                        q = 1800
-                        quantity -= 1800
+                        q = MAX_QUANTITY
+                        quantity -= MAX_QUANTITY
                     }
 
                     kite_enter.add({

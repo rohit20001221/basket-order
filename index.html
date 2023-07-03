@@ -26,7 +26,7 @@
             var kite_enter = new KiteConnect("uky14hfmn5fnfrlz");
             var kite_exit = new KiteConnect("uky14hfmn5fnfrlz");
 
-            // Add a stock to the basket
+            // Add stock to the basket
             const basket = document.getElementById("basket").value
             basket.split("\n").forEach(item => {
                 const [symbol, _quantity] = item.split(",")
@@ -53,7 +53,7 @@
                         quantity: q,
                         transaction_type: "BUY",
                         order_type: "MARKET",
-                        product: "MIS"
+                        product: "NRML"
                     });
 
                     kite_exit.add({
@@ -62,7 +62,7 @@
                         quantity: q,
                         transaction_type: "SELL",
                         order_type: "MARKET",
-                        product: "MIS"
+                        product: "NRML"
                     });
 
                 }
